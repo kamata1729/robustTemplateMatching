@@ -8,7 +8,7 @@ from torchvision import models, transforms, utils
 import numpy as np
 import copy
 
-import cython_calc_NCC
+import cython_files.cython_calc_NCC
 
 
 class FeatureExtractor():
