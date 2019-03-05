@@ -7,7 +7,9 @@ import torchvision
 import torch.nn.functional as F
 import torch.nn as nn
 import torch
+import argparse
 from FeatureExtractor import FeatureExtractor
+
 
 def nms(dets, scores, thresh):
     x1 = dets[:, 0, 0]
@@ -37,9 +39,16 @@ def nms(dets, scores, thresh):
 
     return keep
 
-if __name__ == '__main__':
 
-    raw_image = cv2.imread("sample1.png")[..., ::-1]
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='robust template matching using CNN')
+    parser.add_argument('image_path')
+    parser.add_argument('template_path')
+    parser.add_argument('--use_cuda', action='store_true')
+    parser.add_argument('--use_cython', action='store_true')
+    args = parser.parse_args()
+
+    raw_image = cv2.imread(args.image_path)[..., ::-1]
     image = transforms.Compose([
         transforms.ToTensor(),
         transforms.Normalize(
@@ -48,7 +57,7 @@ if __name__ == '__main__':
         )
     ])(raw_image.copy()).unsqueeze(0)
 
-    raw_template = raw_image[120:210, 85:130, :]
+    raw_template = cv2.imread(args.template_path)[..., ::-1]
     template = transforms.Compose([
         transforms.ToTensor(),
         transforms.Normalize(
@@ -58,8 +67,9 @@ if __name__ == '__main__':
     ])(raw_template.copy()).unsqueeze(0)
 
     vgg_feature = models.vgg13(pretrained=True).features
-    FE = FeatureExtractor(vgg_feature, use_cuda=False, padding=True)
-    boxes, centers, scores = FE(template, image, threshold=None)
+    FE = FeatureExtractor(vgg_feature, use_cuda=args.use_cuda, padding=True)
+    boxes, centers, scores = FE(
+        template, image, threshold=None, use_cython=args.use_cython)
     d_img = raw_image.astype(np.uint8).copy()
     for i in nms(np.array(boxes), np.array(scores), thresh=0.5):
         d_img = cv2.rectangle(d_img, boxes[i][0], boxes[i][1], (255, 0, 0), 3)

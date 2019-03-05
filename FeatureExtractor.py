@@ -10,6 +10,7 @@ import copy
 
 import cython_calc_NCC
 
+
 class FeatureExtractor():
     def __init__(self, model, use_cuda=True, padding=True):
         self.model = copy.deepcopy(model)
@@ -69,14 +70,13 @@ class FeatureExtractor():
         h_f, w_f = F.shape[-2:]
         NCC = np.zeros((M.shape[-2] - h_f, M.shape[-1] - w_f))
         for i in range(M.shape[-2] - h_f):
-            print(i)
             for j in range(M.shape[-1] - w_f):
                 M_tilde = M[:, :, i:i+h_f, j:j+w_f]
                 NCC[i, j] = np.sum(
                     (M_tilde * F)/(np.linalg.norm(M_tilde)*np.linalg.norm(F)))
         return NCC
 
-    def __call__(self, template, image, threshold=None):
+    def __call__(self, template, image, threshold=None, use_cython=True):
         if self.use_cuda:
             template = template.cuda()
             image = image.cuda()
@@ -103,30 +103,20 @@ class FeatureExtractor():
 
         print("calc NCC...")
         # calc NCC
-        F = self.template_feature_map.numpy()[0].astype(np.double)
-        M = self.image_feature_map.numpy()[0].astype(np.double)
-        print("F")
-        print(F.shape)
-        print("M 1")
-        print(M.shape)
-        print("f_norm")
-        print(self.template_feature_map.norm())
+        F = self.template_feature_map.numpy()[0].astype(np.float32)
+        M = self.image_feature_map.numpy()[0].astype(np.float32)
 
-        self.NCC = np.zeros((M.shape[1] - F.shape[1]) * (M.shape[2] - F.shape[2])).astype(np.double)
-        print("NCC")
-        print(self.NCC.shape)
-        cython_calc_NCC.c_calc_NCC(M.flatten().astype(np.double), np.array(M.shape).astype(
-            np.int32), F.flatten().astype(np.double), np.array(F.shape).astype(np.int32), self.NCC)
-        print(self.NCC.shape)
-        self.NCC = self.NCC.reshape(
-            [M.shape[1] - F.shape[1], M.shape[2] - F.shape[2]])
-        print(self.NCC.shape)
-        print(self.NCC)
+        if use_cython:
+            self.NCC = np.zeros(
+                (M.shape[1] - F.shape[1]) * (M.shape[2] - F.shape[2])).astype(np.float32)
+            cython_calc_NCC.c_calc_NCC(M.flatten().astype(np.float32), np.array(M.shape).astype(
+                np.int32), F.flatten().astype(np.float32), np.array(F.shape).astype(np.int32), self.NCC)
+            self.NCC = self.NCC.reshape(
+                [M.shape[1] - F.shape[1], M.shape[2] - F.shape[2]])
+        else:
+            self.NCC = self.calc_NCC(
+                self.template_feature_map.numpy(), self.image_feature_map.numpy())
 
-        NCC_np = self.calc_NCC(self.template_feature_map.numpy(), self.image_feature_map.numpy())
-        print(NCC_np)
-        print("NCC diff")
-        print(np.sum((NCC_np - self.NCC)**2))
         if threshold is None:
             threshold = 0.95 * np.max(self.NCC)
         max_indices = np.array(np.where(self.NCC > threshold)).T

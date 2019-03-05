@@ -10,9 +10,9 @@ if __name__ == '__main__':
     print(b)
     print("NORM F")
     print(np.linalg.norm(b))
-    c =  np.zeros(a.shape[0] * (a.shape[1] - b.shape[1]) * (a.shape[2] - b.shape[2])).astype(np.double)
-    cython_calc_NCC.c_calc_NCC(a.flatten().astype(np.double), np.array(a.shape).astype(
-        np.int32), b.flatten().astype(np.double), np.array(b.shape).astype(np.int32), c)
+    c =  np.zeros(a.shape[0] * (a.shape[1] - b.shape[1]) * (a.shape[2] - b.shape[2])).astype(np.float32)
+    cython_calc_NCC.c_calc_NCC(a.flatten().astype(np.float32), np.array(a.shape).astype(
+        np.int32), b.flatten().astype(np.float32), np.array(b.shape).astype(np.int32), c)
     print("c")
     print(c)
     print(type(c))

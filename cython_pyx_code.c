@@ -1361,7 +1361,7 @@ static PyTypeObject *__pyx_ptype_5numpy_ufunc = 0;
 static CYTHON_INLINE char *__pyx_f_5numpy__util_dtypestring(PyArray_Descr *, char *, char *, int *); /*proto*/
 
 /* Module declarations from 'cython_calc_NCC' */
-static __Pyx_TypeInfo __Pyx_TypeInfo_double = { "double", NULL, sizeof(double), { 0 }, 0, 'R', 0, 0 };
+static __Pyx_TypeInfo __Pyx_TypeInfo_float = { "float", NULL, sizeof(float), { 0 }, 0, 'R', 0, 0 };
 static __Pyx_TypeInfo __Pyx_TypeInfo_int = { "int", NULL, sizeof(int), { 0 }, 0, IS_UNSIGNED(int) ? 'U' : 'I', IS_UNSIGNED(int), 0 };
 #define __Pyx_MODULE_NAME "cython_calc_NCC"
 int __pyx_module_is_main_cython_calc_NCC = 0;
@@ -1431,9 +1431,9 @@ static PyObject *__pyx_tuple__10;
 static PyObject *__pyx_codeobj__11;
 
 /* "cython_pyx_code.pyx":6
- *     void calc_NCC(double *m_flat, int m_size[3], double *f_flat, int f_size[3], double *NCC_flat)
+ *     void calc_NCC(float *m_flat, int m_size[3], float *f_flat, int f_size[3], float *NCC_flat)
  * 
- * def c_calc_NCC(np.ndarray[double, ndim=1] m_flat, np.ndarray[int, ndim=1] m_size, np.ndarray[double, ndim=1] f_flat, np.ndarray[int, ndim=1] f_size, np.ndarray[double, ndim=1] NCC_flat):             # <<<<<<<<<<<<<<
+ * def c_calc_NCC(np.ndarray[float, ndim=1] m_flat, np.ndarray[int, ndim=1] m_size, np.ndarray[float, ndim=1] f_flat, np.ndarray[int, ndim=1] f_size, np.ndarray[float, ndim=1] NCC_flat):             # <<<<<<<<<<<<<<
  *     calc_NCC(&m_flat[0], &m_size[0], &f_flat[0], &f_size[0], &NCC_flat[0])
  */
 
@@ -1574,7 +1574,7 @@ static PyObject *__pyx_pf_15cython_calc_NCC_c_calc_NCC(CYTHON_UNUSED PyObject *_
   __pyx_pybuffernd_NCC_flat.rcbuffer = &__pyx_pybuffer_NCC_flat;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_m_flat.rcbuffer->pybuffer, (PyObject*)__pyx_v_m_flat, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 6, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_m_flat.rcbuffer->pybuffer, (PyObject*)__pyx_v_m_flat, &__Pyx_TypeInfo_float, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 6, __pyx_L1_error)
   }
   __pyx_pybuffernd_m_flat.diminfo[0].strides = __pyx_pybuffernd_m_flat.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_m_flat.diminfo[0].shape = __pyx_pybuffernd_m_flat.rcbuffer->pybuffer.shape[0];
   {
@@ -1584,7 +1584,7 @@ static PyObject *__pyx_pf_15cython_calc_NCC_c_calc_NCC(CYTHON_UNUSED PyObject *_
   __pyx_pybuffernd_m_size.diminfo[0].strides = __pyx_pybuffernd_m_size.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_m_size.diminfo[0].shape = __pyx_pybuffernd_m_size.rcbuffer->pybuffer.shape[0];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_f_flat.rcbuffer->pybuffer, (PyObject*)__pyx_v_f_flat, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 6, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_f_flat.rcbuffer->pybuffer, (PyObject*)__pyx_v_f_flat, &__Pyx_TypeInfo_float, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 6, __pyx_L1_error)
   }
   __pyx_pybuffernd_f_flat.diminfo[0].strides = __pyx_pybuffernd_f_flat.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_f_flat.diminfo[0].shape = __pyx_pybuffernd_f_flat.rcbuffer->pybuffer.shape[0];
   {
@@ -1594,13 +1594,13 @@ static PyObject *__pyx_pf_15cython_calc_NCC_c_calc_NCC(CYTHON_UNUSED PyObject *_
   __pyx_pybuffernd_f_size.diminfo[0].strides = __pyx_pybuffernd_f_size.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_f_size.diminfo[0].shape = __pyx_pybuffernd_f_size.rcbuffer->pybuffer.shape[0];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_NCC_flat.rcbuffer->pybuffer, (PyObject*)__pyx_v_NCC_flat, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 6, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_NCC_flat.rcbuffer->pybuffer, (PyObject*)__pyx_v_NCC_flat, &__Pyx_TypeInfo_float, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 6, __pyx_L1_error)
   }
   __pyx_pybuffernd_NCC_flat.diminfo[0].strides = __pyx_pybuffernd_NCC_flat.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_NCC_flat.diminfo[0].shape = __pyx_pybuffernd_NCC_flat.rcbuffer->pybuffer.shape[0];
 
   /* "cython_pyx_code.pyx":7
  * 
- * def c_calc_NCC(np.ndarray[double, ndim=1] m_flat, np.ndarray[int, ndim=1] m_size, np.ndarray[double, ndim=1] f_flat, np.ndarray[int, ndim=1] f_size, np.ndarray[double, ndim=1] NCC_flat):
+ * def c_calc_NCC(np.ndarray[float, ndim=1] m_flat, np.ndarray[int, ndim=1] m_size, np.ndarray[float, ndim=1] f_flat, np.ndarray[int, ndim=1] f_size, np.ndarray[float, ndim=1] NCC_flat):
  *     calc_NCC(&m_flat[0], &m_size[0], &f_flat[0], &f_size[0], &NCC_flat[0])             # <<<<<<<<<<<<<<
  */
   __pyx_t_1 = 0;
@@ -1653,12 +1653,12 @@ static PyObject *__pyx_pf_15cython_calc_NCC_c_calc_NCC(CYTHON_UNUSED PyObject *_
     __Pyx_RaiseBufferIndexError(__pyx_t_2);
     __PYX_ERR(0, 7, __pyx_L1_error)
   }
-  calc_NCC((&(*__Pyx_BufPtrStrided1d(double *, __pyx_pybuffernd_m_flat.rcbuffer->pybuffer.buf, __pyx_t_1, __pyx_pybuffernd_m_flat.diminfo[0].strides))), (&(*__Pyx_BufPtrStrided1d(int *, __pyx_pybuffernd_m_size.rcbuffer->pybuffer.buf, __pyx_t_3, __pyx_pybuffernd_m_size.diminfo[0].strides))), (&(*__Pyx_BufPtrStrided1d(double *, __pyx_pybuffernd_f_flat.rcbuffer->pybuffer.buf, __pyx_t_4, __pyx_pybuffernd_f_flat.diminfo[0].strides))), (&(*__Pyx_BufPtrStrided1d(int *, __pyx_pybuffernd_f_size.rcbuffer->pybuffer.buf, __pyx_t_5, __pyx_pybuffernd_f_size.diminfo[0].strides))), (&(*__Pyx_BufPtrStrided1d(double *, __pyx_pybuffernd_NCC_flat.rcbuffer->pybuffer.buf, __pyx_t_6, __pyx_pybuffernd_NCC_flat.diminfo[0].strides))));
+  calc_NCC((&(*__Pyx_BufPtrStrided1d(float *, __pyx_pybuffernd_m_flat.rcbuffer->pybuffer.buf, __pyx_t_1, __pyx_pybuffernd_m_flat.diminfo[0].strides))), (&(*__Pyx_BufPtrStrided1d(int *, __pyx_pybuffernd_m_size.rcbuffer->pybuffer.buf, __pyx_t_3, __pyx_pybuffernd_m_size.diminfo[0].strides))), (&(*__Pyx_BufPtrStrided1d(float *, __pyx_pybuffernd_f_flat.rcbuffer->pybuffer.buf, __pyx_t_4, __pyx_pybuffernd_f_flat.diminfo[0].strides))), (&(*__Pyx_BufPtrStrided1d(int *, __pyx_pybuffernd_f_size.rcbuffer->pybuffer.buf, __pyx_t_5, __pyx_pybuffernd_f_size.diminfo[0].strides))), (&(*__Pyx_BufPtrStrided1d(float *, __pyx_pybuffernd_NCC_flat.rcbuffer->pybuffer.buf, __pyx_t_6, __pyx_pybuffernd_NCC_flat.diminfo[0].strides))));
 
   /* "cython_pyx_code.pyx":6
- *     void calc_NCC(double *m_flat, int m_size[3], double *f_flat, int f_size[3], double *NCC_flat)
+ *     void calc_NCC(float *m_flat, int m_size[3], float *f_flat, int f_size[3], float *NCC_flat)
  * 
- * def c_calc_NCC(np.ndarray[double, ndim=1] m_flat, np.ndarray[int, ndim=1] m_size, np.ndarray[double, ndim=1] f_flat, np.ndarray[int, ndim=1] f_size, np.ndarray[double, ndim=1] NCC_flat):             # <<<<<<<<<<<<<<
+ * def c_calc_NCC(np.ndarray[float, ndim=1] m_flat, np.ndarray[int, ndim=1] m_size, np.ndarray[float, ndim=1] f_flat, np.ndarray[int, ndim=1] f_size, np.ndarray[float, ndim=1] NCC_flat):             # <<<<<<<<<<<<<<
  *     calc_NCC(&m_flat[0], &m_size[0], &f_flat[0], &f_size[0], &NCC_flat[0])
  */
 
@@ -4364,9 +4364,9 @@ static int __Pyx_InitCachedConstants(void) {
   __Pyx_GIVEREF(__pyx_tuple__9);
 
   /* "cython_pyx_code.pyx":6
- *     void calc_NCC(double *m_flat, int m_size[3], double *f_flat, int f_size[3], double *NCC_flat)
+ *     void calc_NCC(float *m_flat, int m_size[3], float *f_flat, int f_size[3], float *NCC_flat)
  * 
- * def c_calc_NCC(np.ndarray[double, ndim=1] m_flat, np.ndarray[int, ndim=1] m_size, np.ndarray[double, ndim=1] f_flat, np.ndarray[int, ndim=1] f_size, np.ndarray[double, ndim=1] NCC_flat):             # <<<<<<<<<<<<<<
+ * def c_calc_NCC(np.ndarray[float, ndim=1] m_flat, np.ndarray[int, ndim=1] m_size, np.ndarray[float, ndim=1] f_flat, np.ndarray[int, ndim=1] f_size, np.ndarray[float, ndim=1] NCC_flat):             # <<<<<<<<<<<<<<
  *     calc_NCC(&m_flat[0], &m_size[0], &f_flat[0], &f_size[0], &NCC_flat[0])
  */
   __pyx_tuple__10 = PyTuple_Pack(5, __pyx_n_s_m_flat, __pyx_n_s_m_size, __pyx_n_s_f_flat, __pyx_n_s_f_size, __pyx_n_s_NCC_flat); if (unlikely(!__pyx_tuple__10)) __PYX_ERR(0, 6, __pyx_L1_error)
@@ -4492,9 +4492,9 @@ PyMODINIT_FUNC PyInit_cython_calc_NCC(void)
   #endif
 
   /* "cython_pyx_code.pyx":6
- *     void calc_NCC(double *m_flat, int m_size[3], double *f_flat, int f_size[3], double *NCC_flat)
+ *     void calc_NCC(float *m_flat, int m_size[3], float *f_flat, int f_size[3], float *NCC_flat)
  * 
- * def c_calc_NCC(np.ndarray[double, ndim=1] m_flat, np.ndarray[int, ndim=1] m_size, np.ndarray[double, ndim=1] f_flat, np.ndarray[int, ndim=1] f_size, np.ndarray[double, ndim=1] NCC_flat):             # <<<<<<<<<<<<<<
+ * def c_calc_NCC(np.ndarray[float, ndim=1] m_flat, np.ndarray[int, ndim=1] m_size, np.ndarray[float, ndim=1] f_flat, np.ndarray[int, ndim=1] f_size, np.ndarray[float, ndim=1] NCC_flat):             # <<<<<<<<<<<<<<
  *     calc_NCC(&m_flat[0], &m_size[0], &f_flat[0], &f_size[0], &NCC_flat[0])
  */
   __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_15cython_calc_NCC_1c_calc_NCC, NULL, __pyx_n_s_cython_calc_NCC); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 6, __pyx_L1_error)
