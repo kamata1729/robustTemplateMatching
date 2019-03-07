@@ -62,15 +62,15 @@ class FeatureExtractor():
         l = np.sum(self.rf <= min(list(template.size()[-2:]))) - 1
         l_star = max(l - k, 1)
         return l_star
-
+    
     def calc_NCC(self, F, M):
-        h_f, w_f = F.shape[-2:]
-        NCC = np.zeros((M.shape[-2] - h_f, M.shape[-1] - w_f))
+        c, h_f, w_f = F.shape[-3:]
+        tmp = np.zeros((c, M.shape[-2] - h_f, M.shape[-1] - w_f, h_f, w_f))
         for i in range(M.shape[-2] - h_f):
             for j in range(M.shape[-1] - w_f):
-                M_tilde = M[:, :, i:i+h_f, j:j+w_f]
-                NCC[i, j] = np.sum(
-                    (M_tilde * F)/(np.linalg.norm(M_tilde)*np.linalg.norm(F)))
+                M_tilde = M[:, :, i:i+h_f, j:j+w_f][:, None, None, :, :]
+                tmp[:, i, j, :, :] = M_tilde / np.linalg.norm(M_tilde)
+        NCC = np.sum(tmp*F.reshape(F.shape[-3], 1, 1, F.shape[-2], F.shape[-1]), axis=(0, 3, 4))
         return NCC
 
     def __call__(self, template, image, threshold=None, use_cython=True):
