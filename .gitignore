@@ -1,3 +1,5 @@
 .ipynb_checkpoints/
 __pycache__/
-py_sample.py
+*.ipynb
+sample_private/
+template_private/

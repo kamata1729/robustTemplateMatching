@@ -8,9 +8,6 @@ from torchvision import models, transforms, utils
 import numpy as np
 import copy
 
-import cython_files.cython_calc_NCC as cython_calc_NCC
-
-
 class FeatureExtractor():
     def __init__(self, model, use_cuda=True, padding=True):
         self.model = copy.deepcopy(model)
@@ -107,6 +104,7 @@ class FeatureExtractor():
         M = self.image_feature_map.numpy()[0].astype(np.float32)
 
         if use_cython:
+            import cython_files.cython_calc_NCC as cython_calc_NCC
             self.NCC = np.zeros(
                 (M.shape[1] - F.shape[1]) * (M.shape[2] - F.shape[2])).astype(np.float32)
             cython_calc_NCC.c_calc_NCC(M.flatten().astype(np.float32), np.array(M.shape).astype(
@@ -120,7 +118,7 @@ class FeatureExtractor():
         if threshold is None:
             threshold = 0.95 * np.max(self.NCC)
         max_indices = np.array(np.where(self.NCC > threshold)).T
-        print("length of boxes: {}".format(len(max_indices)))
+        print("detected boxes: {}".format(len(max_indices)))
 
         boxes = []
         centers = []

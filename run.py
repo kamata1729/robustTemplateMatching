@@ -38,7 +38,7 @@ def nms(dets, scores, thresh):
         order = order[inds + 1]
 
     return keep
-
+    
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='robust template matching using CNN')
@@ -48,31 +48,32 @@ if __name__ == '__main__':
     parser.add_argument('--use_cython', action='store_true')
     args = parser.parse_args()
 
-    raw_image = cv2.imread(args.image_path)[..., ::-1]
-    image = transforms.Compose([
+    image_transform = transforms.Compose([
         transforms.ToTensor(),
         transforms.Normalize(
             mean=[0.485, 0.456, 0.406],
             std=[0.229, 0.224, 0.225],
         )
-    ])(raw_image.copy()).unsqueeze(0)
+    ])
+    
+    raw_image = cv2.imread(args.image_path)[..., ::-1]
+    image = image_transform(raw_image.copy()).unsqueeze(0)
 
     raw_template = cv2.imread(args.template_path)[..., ::-1]
-    template = transforms.Compose([
-        transforms.ToTensor(),
-        transforms.Normalize(
-            mean=[0.485, 0.456, 0.406],
-            std=[0.229, 0.224, 0.225],
-        )
-    ])(raw_template.copy()).unsqueeze(0)
+    template = image_transform(raw_template.copy()).unsqueeze(0)
 
     vgg_feature = models.vgg13(pretrained=True).features
     FE = FeatureExtractor(vgg_feature, use_cuda=args.use_cuda, padding=True)
     boxes, centers, scores = FE(
         template, image, threshold=None, use_cython=args.use_cython)
     d_img = raw_image.astype(np.uint8).copy()
-    for i in nms(np.array(boxes), np.array(scores), thresh=0.5):
+    nms_res = nms(np.array(boxes), np.array(scores), thresh=0.5)
+    print("detected objects: {}".format(len(nms_res)))
+    for i in nms_res:
         d_img = cv2.rectangle(d_img, boxes[i][0], boxes[i][1], (255, 0, 0), 3)
         d_img = cv2.circle(d_img, centers[i], int(
             (boxes[i][1][0] - boxes[i][0][0])*0.2), (0, 0, 255), 2)
-    cv2.imwrite("result.png", d_img[..., ::-1])
+        
+    if cv2.imwrite("result.png", d_img[..., ::-1]):
+        print("result.png was generated")
+    
