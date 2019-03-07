@@ -1,4 +1,4 @@
-# Robust Template Matching Using Scale-Adaptive
+# Robust Template Matching Using Scale-Adaptive Deep Convolutional Features
 Pytorch Implementation of Robust Template Matching Using Scale-Adaptive
 Deep Convolutional Features
 
