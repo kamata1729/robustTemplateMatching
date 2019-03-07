@@ -4,6 +4,12 @@ Deep Convolutional Features
 
 http://www.apsipa.org/proceedings/2017/CONTENTS/papers2017/14DecThursday/TA-02/TA-02.5.pdf
 
+# Requirements
+* torch (1.0.0)
+* torchvision (0.2.1)
+* cv2
+* (optional) cython
+
 # Usage
 ```
 python run.py [sample_image_path] [template_image_path] --use_cuda --use_cython
