@@ -11,6 +11,7 @@ import copy
 class FeatureExtractor():
     def __init__(self, model, use_cuda=True, padding=True):
         self.model = copy.deepcopy(model)
+        self.model = self.model.eval()
         self.use_cuda = use_cuda
         self.feature_maps = []
 
