@@ -70,7 +70,8 @@ class FeatureExtractor():
         for i in range(M.shape[-2] - h_f):
             for j in range(M.shape[-1] - w_f):
                 M_tilde = M[:, :, i:i+h_f, j:j+w_f][:, None, None, :, :]
-                tmp[:, i, j, :, :] = M_tilde / np.linalg.norm(M_tilde)
+                eps = 1e-12
+                tmp[:, i, j, :, :] = M_tilde / (np.linalg.norm(M_tilde) + eps)
         NCC = np.sum(tmp*F.reshape(F.shape[-3], 1, 1, F.shape[-2], F.shape[-1]), axis=(0, 3, 4))
         return NCC
 
@@ -100,11 +101,10 @@ class FeatureExtractor():
             self.image_feature_map = self.image_feature_map.cpu()
 
         print("calc NCC...")
-        # calc NCC
-        F = self.template_feature_map.numpy()[0].astype(np.float32)
-        M = self.image_feature_map.numpy()[0].astype(np.float32)
 
         if use_cython:
+            F = self.template_feature_map.numpy()[0].astype(np.float32)
+            M = self.image_feature_map.numpy()[0].astype(np.float32)
             import cython_files.cython_calc_NCC as cython_calc_NCC
             self.NCC = np.zeros(
                 (M.shape[1] - F.shape[1]) * (M.shape[2] - F.shape[2])).astype(np.float32)
@@ -124,9 +124,24 @@ class FeatureExtractor():
         boxes = []
         centers = []
         scores = []
+
         for max_index in max_indices:
             i_star, j_star = max_index
-            NCC_part = self.NCC[i_star-1:i_star+2, j_star-2:j_star+2]
+
+            # Broadcasting fails if NCC_part is not (3,4) of shape
+            NCC_part = np.zeros([3,4])
+            if i_star>=1 and j_star>=2:
+                NCC_part = self.NCC[i_star-1:i_star+2, j_star-2:j_star+2]
+            elif i_star == 0 and j_star>=2:
+                NCC_part[1:3,:] = self.NCC[0:i_star+2, j_star-2:j_star+2]
+            elif i_star == 0 and j_star == 1:
+                NCC_part[1:3,1:4] = self.NCC[0:i_star+2, j_star-1:j_star+2]
+            elif i_star == 0 and j_star == 0:
+                NCC_part[1:3,1:4] = self.NCC[0:i_star+2, j_star:j_star+3]
+            elif i_star>=1 and j_star == 1:
+                NCC_part[:,1:4] = self.NCC[i_star-1:i_star+2, j_star-1:j_star+2]
+            elif i_star>=1 and j_star == 0:
+                NCC_part[:,2:4] = self.NCC[i_star-1:i_star+2, j_star:j_star+2]
 
             x_center = (j_star + self.template_feature_map.size()
                         [-1]/2) * image.size()[-1] // self.image_feature_map.size()[-1]
@@ -137,18 +152,16 @@ class FeatureExtractor():
             x2_0 = x_center + template.size()[-1]/2
             y1_0 = y_center - template.size()[-2]/2
             y2_0 = y_center + template.size()[-2]/2
-
             stride_product = self.product(self.stride[:self.l_star])
-
+            eps = 1e-12
             x1 = np.sum(
-                NCC_part * (x1_0 + np.array([-2, -1, 0, 1]) * stride_product)[None, :]) / np.sum(NCC_part)
+                NCC_part * (x1_0 + np.array([-2, -1, 0, 1]) * stride_product)[None, :]) / (np.sum(NCC_part) + eps)
             x2 = np.sum(
-                NCC_part * (x2_0 + np.array([-2, -1, 0, 1]) * stride_product)[None, :]) / np.sum(NCC_part)
+                NCC_part * (x2_0 + np.array([-2, -1, 0, 1]) * stride_product)[None, :]) / (np.sum(NCC_part) + eps)
             y1 = np.sum(
-                NCC_part * (y1_0 + np.array([-1, 0, 1]) * stride_product)[:, None]) / np.sum(NCC_part)
+                NCC_part * (y1_0 + np.array([-1, 0, 1]) * stride_product)[:, None]) / (np.sum(NCC_part) + eps)
             y2 = np.sum(
-                NCC_part * (y2_0 + np.array([-1, 0, 1]) * stride_product)[:, None]) / np.sum(NCC_part)
-
+                NCC_part * (y2_0 + np.array([-1, 0, 1]) * stride_product)[:, None]) / (np.sum(NCC_part) + eps)
             x1 = int(round(x1))
             x2 = int(round(x2))
             y1 = int(round(y1))
