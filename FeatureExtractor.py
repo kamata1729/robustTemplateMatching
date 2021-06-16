@@ -115,9 +115,15 @@ class FeatureExtractor():
         else:
             self.NCC = self.calc_NCC(
                 self.template_feature_map.numpy(), self.image_feature_map.numpy())
+        max_i = self.NCC.shape[0] - 1
+        max_j = self.NCC.shape[1] - 1
 
+        # Lower -> usually lower threshold is more relaxed
         if threshold is None:
             threshold = 0.95 * np.max(self.NCC)
+        else:
+            threshold = threshold * np.max(self.NCC)
+
         max_indices = np.array(np.where(self.NCC > threshold)).T
         print("detected boxes: {}".format(len(max_indices)))
 
@@ -127,6 +133,12 @@ class FeatureExtractor():
 
         for max_index in max_indices:
             i_star, j_star = max_index
+
+            # Avoids overflow
+            if i_star >= max_i:
+                i_star -= 1
+            if j_star >= max_j:
+                j_star -= 1
 
             # Broadcasting fails if NCC_part is not (3,4) of shape
             NCC_part = np.zeros([3,4])
