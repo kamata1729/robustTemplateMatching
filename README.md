@@ -20,7 +20,7 @@ python run.py [sample_image_path] [template_image_path] --use_cuda --use_cython
 
 # Using Cython 
 
-Using Cython requires you to build the files in the `cython_files` folder. To build the same, please use: 
+Using Cython requires you to build the files in the `cython_files` folder. To build the same, please use the following command in the `cython_files folder`: 
 
 ```
 python setup.py build_ext -i
