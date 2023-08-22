@@ -46,6 +46,8 @@ if __name__ == '__main__':
     parser.add_argument('template_path')
     parser.add_argument('--use_cuda', action='store_true')
     parser.add_argument('--use_cython', action='store_true')
+    parser.add_argument('--threshold', type=float, default=None)
+    parser.add_argument('--nms', type=float, default=0.5)
     args = parser.parse_args()
 
     image_transform = transforms.Compose([
@@ -65,14 +67,17 @@ if __name__ == '__main__':
     vgg_feature = models.vgg13(pretrained=True).features
     FE = FeatureExtractor(vgg_feature, use_cuda=args.use_cuda, padding=True)
     boxes, centers, scores = FE(
-        template, image, threshold=None, use_cython=args.use_cython)
+        template, image, threshold=args.threshold, use_cython=args.use_cython)
     d_img = raw_image.astype(np.uint8).copy()
-    nms_res = nms(np.array(boxes), np.array(scores), thresh=0.5)
-    print("detected objects: {}".format(len(nms_res)))
-    for i in nms_res:
-        d_img = cv2.rectangle(d_img, boxes[i][0], boxes[i][1], (255, 0, 0), 3)
-        d_img = cv2.circle(d_img, centers[i], int(
-            (boxes[i][1][0] - boxes[i][0][0])*0.2), (0, 0, 255), 2)
+
+    # Avoid index error if no box is detected
+    if len(boxes) > 0:
+        nms_res = nms(np.array(boxes), np.array(scores), thresh=0.5)
+        print("detected objects: {}".format(len(nms_res)))
+        for i in nms_res:
+            d_img = cv2.rectangle(d_img, boxes[i][0], boxes[i][1], (255, 0, 0), 3)
+            d_img = cv2.circle(d_img, centers[i], int(
+                (boxes[i][1][0] - boxes[i][0][0])*0.2), (0, 0, 255), 2)
         
     if cv2.imwrite("result.png", d_img[..., ::-1]):
         print("result.png was generated")

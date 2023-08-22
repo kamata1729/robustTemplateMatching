@@ -18,7 +18,21 @@ python run.py [sample_image_path] [template_image_path] --use_cuda --use_cython
 * add --use_cuda option to use GPU
 * add --use_cython option to execute with cython
 
-result image will be saved as result.png
+# Using Cython 
+
+Using Cython requires you to build the files in the `cython_files` folder. To build the same, please use the following command in the `cython_files folder`: 
+
+```
+python setup.py build_ext -i
+```
+
+If your Python version is >3.8, you might need to use a forced build: 
+
+```
+python setup.py build_ext -i -f
+```
+
+The result image will be saved as result.png.
 
 # Example
 ```
